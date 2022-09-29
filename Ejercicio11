@@ -1,0 +1,58 @@
+import sqlite3
+
+def main():
+    crearTabla()
+
+    insert('Carolina', 'Sánchez')
+    insert('Ana', 'Nuñez')
+    insert('Alberto', 'Lopez')
+    insert('Alexa', 'Perez')
+    insert('Daniel', 'Jimenez')
+    insert('Alicia', 'Hernandez')
+    insert('Mario', 'Ortega')
+    insert('Liliana', 'Garcia')
+
+    busqueda('Liliana')
+    busqueda('Mario')
+
+def crearTabla():
+    """Crear el archivo .db y la tabla"""
+    conn = sqlite3.connect("ejercicio_11.db")
+    cursor = conn.cursor()
+    query = "CREATE TABLE Alumnos(id INT, nombre TEXT, apellido TEXT);"
+    cursor.execute(query)
+    cursor.close()
+    conn.close()
+
+# id para aumentar automaticamente el id 
+# cada vez que se llama a la función insert()
+id = 0
+def insert(nombre, ape):
+    """ Crea elementos en la tabla Alumnos"""
+    global id
+    id += 1
+    conn = sqlite3.connect("ejercicio_11.db")
+    cursor = conn.cursor()
+    query = f"INSERT INTO Alumnos (id, nombre, apellido) VALUES ({id}, '{nombre}', '{ape}');"
+    cursor.execute(query)
+    
+    conn.commit()
+
+    cursor.close()
+    conn.close()
+
+def busqueda(nombre):
+    """ Devuelve información del alumno, si existen alumnos con ese 
+    nombre en la tabla """
+    conn = sqlite3.connect("ejercicio_11.db")
+    cursor = conn.cursor()
+    query = f"SELECT * FROM Alumnos WHERE nombre = '{nombre}';"
+    rows = cursor.execute(query)
+    data = rows.fetchone()
+    print(f"Se obtuvieron resultados: \n{data}") if data else print(f"No se encontraron coincidencias para: {nombre}")
+
+    cursor.close()
+    conn.close()
+
+if __name__ == '__main__':
+    main()
